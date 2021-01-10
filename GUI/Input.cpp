@@ -18,7 +18,8 @@ char Input::GetKeyQeueue() {
 }
 string Input::GetSrting(Output *pOut)
 {
-	string outputString = "this";
+	pOut->PrintMsg("Enter your string:");
+	string outputString = "";
 	bool exit = true;
 	char inputKey;
 	while (exit) {

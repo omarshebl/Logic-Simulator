@@ -33,11 +33,14 @@ void Cut::Execute()
 	if (counter == 1) {
 		for (int i = 0; i < compcount; i++) {
 			if (List[i]->GetSelect()) {
+				List[i]->SetSelect(false);
 				pManager->SetCopied(List[i]);
+				pManager->SetCopiedCut(1);
 				compcount--;
 				List[i] = List[compcount];
 				List[compcount] = NULL;
 				pOut->PrintMsg("Cutted Gate Succesfully !");
+				pManager->SetCopiedCut(1);
 				pManager->SetCompCount(compcount);
 				pManager->UnselectALL();
 			}

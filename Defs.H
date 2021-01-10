@@ -136,7 +136,9 @@ enum FANOUT
 	XOR2_FANOUT = 5,
 	XNOR2_FANOUT = 5,
 	NOR3_FANOUT = 5,
-	XOR3_FANOUT = 5
+	XOR3_FANOUT = 5,
+	SWITCH_FANOUT=5,
+	LED_FANOUT=5
 };
 
 //A structure to contain drawing parameters for each component

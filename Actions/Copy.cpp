@@ -34,6 +34,7 @@ void Copy::Execute()
 		for (int i = 0; i < compcount; i++) {
 			if (List[i]->GetSelect()) {
 				pManager->SetCopied(List[i]);
+				pManager->SetCopiedCut(0);
 				pManager->UnselectALL();
 				pOut->PrintMsg("Copied Gate Succesfully !");
 			}

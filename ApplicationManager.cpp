@@ -14,13 +14,17 @@
 #include "Actions\AddLED.h"
 #include "Actions\AddSWITCH.h"
 
-
 #include "Actions\Select.h"
 #include "Actions\Copy.h"
 #include "Actions\Cut.h"
 #include "Actions\Paste.h"
 #include "Actions\Delete.h"
-
+#include "Actions\Edit.h"
+#include "Actions\Save.h"
+#include "Actions\Load.h"
+#include "Actions\AddGATE.h"
+#include <iostream>
+using namespace std;
 
 
 
@@ -38,6 +42,16 @@ Component** ApplicationManager::GetCompList() {
 }
 
 
+Component* ApplicationManager::GetSelectedComp()
+{
+	Component* pointer = NULL;
+	for (int i = 0; i < CompCount; i++) {
+		if (CompList[i]->GetSelect())
+			pointer = CompList[i];
+	}
+	return pointer;
+}
+
 int ApplicationManager::SelectedCounter() const {
 	int counter = 0;
 	for (int i = 0; i < CompCount; i++) {
@@ -54,15 +68,139 @@ void ApplicationManager::UnselectALL()  {
 }
 
 void ApplicationManager::SetCopied(Component* cComp) {
-	Copied = cComp;
+	Clipboard = cComp;
+}
+
+void ApplicationManager::ResetCopied()
+{
+	Clipboard = NULL;
 }
 
 Component* ApplicationManager::GetCopied() {
-	return Copied;
+	return Clipboard;
 }
+
+void ApplicationManager::SetCopiedCut(int input) {
+	CopiedCut = input;
+}
+
+int ApplicationManager::GetCopiedCut() {
+	return CopiedCut;
+}
+
+void ApplicationManager::SetCuttedGate(GraphicsInfo input)
+{
+	Clipboard->SetGraphics(input);
+}
+
+void ApplicationManager::SaveGates(ofstream& filename)
+{
+	for (int i = 0; i < CompCount; i++) {
+		CompList[i]->SaveGate(filename);
+	}
+}
+
+void ApplicationManager::LoadGates(ifstream& filename)
+{
+	int X, Y;
+	string label;
+	string compType;
+	int gateType = 14;
+	GraphicsInfo G;
+
+	while (filename >> compType && compType != "-1") {
+		if (filename.eof()) {
+			break;
+		}
+
+		filename >> label;
+		filename >> X >> Y;
+
+		if (label == "&")
+			label = "";
+
+		if (compType == "AND2") {
+			cout << "and";
+			G = CreateGraphics(X, Y, ITM_AND2);
+			gateType = ITM_AND2;
+		}
+		else if (compType == "OR2") {
+			cout << "or";
+			G = CreateGraphics(X, Y, ITM_OR2);
+			gateType = ITM_OR2;
+		}
+		else if (compType == "NOT") {
+			G = CreateGraphics(X, Y, ITM_NOT);
+			gateType = ITM_NOT;
+		}
+		else if (compType == "NAND2") {
+			cout << "nand";
+			G = CreateGraphics(X, Y, ITM_NAND2);
+			gateType = ITM_NAND2;
+		}
+		else if (compType == "NOR2") {
+			cout << "nor";
+			G = CreateGraphics(X, Y, ITM_NOR2);
+			gateType = ITM_NOR2;
+		}
+		else if (compType == "XOR2") {
+			cout << "xor";
+			G = CreateGraphics(X, Y, ITM_XOR2);
+			gateType = ITM_XOR2;
+		}
+		else if (compType == "XNOR2") {
+			G = CreateGraphics(X, Y, ITM_XNOR2);
+			gateType = ITM_XNOR2;
+		}
+		else if (compType == "AND3") {
+			G = CreateGraphics(X, Y, ITM_AND3);
+			gateType = ITM_AND3;
+		}
+		else if (compType == "NOR3") {
+			G = CreateGraphics(X, Y, ITM_NOR3);
+			gateType = ITM_NOR3;
+		}
+		else if (compType == "XOR3") {
+			G = CreateGraphics(X, Y, ITM_XOR3);
+			gateType = ITM_XOR3;
+		}
+		else if (compType == "BUFFER") {
+			G = CreateGraphics(X, Y, ITM_BUFFER);
+			gateType = ITM_BUFFER;
+		}
+		else if (compType == "SWITCH") {
+			G = CreateGraphics(X, Y, ITM_SWITCH);
+			gateType = ITM_SWITCH;
+		}
+		else if (compType == "LED") {
+			G = CreateGraphics(X, Y, ITM_LED);
+			gateType = ITM_LED;
+		}
+		if (gateType != 14) {
+			cout << "hi";
+			AddGATE* pAct = new AddGATE(this);
+			pAct->Execute(gateType, G, label);
+			delete pAct;
+		}
+	}
+
+
+}
+
+void ApplicationManager::DeleteAll()
+{
+	for (int i = 0; i < CompCount; i++) {
+		delete CompList[i];
+		CompList[i] = NULL;
+	}
+	CompCount = 0;
+}
+
 ApplicationManager::ApplicationManager()
 {
 	CompCount = 0;
+	SWITCHSC = 0;
+	LEDSC = 0;
 
 	for(int i=0; i<MaxCompCount; i++)
 		CompList[i] = NULL;
@@ -74,7 +212,68 @@ ApplicationManager::ApplicationManager()
 ////////////////////////////////////////////////////////////////////
 void ApplicationManager::AddComponent(Component* pComp)
 {
+	if (pComp->GetType() == ITM_SWITCH)
+		SWITCHSC++;
+
+	if (pComp->GetType() == ITM_LED)
+		LEDSC++;
+
 	CompList[CompCount++] = pComp;		
+}
+void ApplicationManager::DeleteLED()
+{
+	LEDSC--;
+}
+void ApplicationManager::DeleteSWITCH()
+{
+	SWITCHSC--;
+}
+bool ApplicationManager::CheckOverlap(int Cx, int Cy)
+{
+	GraphicsInfo Check;
+	bool Checker = false;
+	for (int i = 0; i < CompCount; i++) {
+		Check = CompList[i]->GetGraphics();
+		if (((Cx > (Check.x1 - UI.COMP_Width / 2)) && (Cx < (Check.x2 + UI.COMP_Width / 2))) && ((Cy > (Check.y1 - UI.COMP_Height / 2)) && (Cy < (Check.y2 + UI.COMP_Height / 2)))) {
+			Checker = true;
+		}
+	}
+	return Checker;
+}
+bool ApplicationManager::CheckDrawArea(int Cx, int Cy)
+{
+	bool checker = false;
+	if ((Cy >= (UI.ToolBarHeight + UI.COMP_Height / 2)) && Cy < UI.height - (UI.StatusBarHeight + UI.COMP_Height / 2) && Cx >(UI.COMP_Width / 2) && Cx < (UI.width - UI.COMP_Width / 2)) {
+		checker = true;
+	}
+	return checker;
+}
+bool ApplicationManager::GetClickedComponent(int Cx, int Cy, Component*& pointer)
+{
+	GraphicsInfo Check;
+	bool Checker = false;
+	for (int i = 0; i < CompCount; i++) {
+		Check = CompList[i]->GetGraphics();
+		if (((Cx > Check.x1) && (Cx < Check.x2)) && ((Cy > Check.y1) && (Cy < Check.y2))) {
+			Checker = true;
+			pointer = CompList[i];
+		}
+	}
+	return Checker;
+}
+GraphicsInfo ApplicationManager::CreateGraphics(int Cx, int Cy, int GateType)
+{
+	GraphicsInfo output;
+	int Len = UI.COMP_Width;
+	if (GateType == ITM_SWITCH || GateType == ITM_LED) {
+		Len = UI.COMP2_Width;
+	}
+	int Wdth = UI.COMP_Height;
+	output.x1 = Cx - Len / 2;
+	output.x2 = Cx + Len / 2;
+	output.y1 = Cy - Wdth / 2;
+	output.y2 = Cy + Wdth / 2;
+	return output;
 }
 ////////////////////////////////////////////////////////////////////
 
@@ -166,6 +365,18 @@ void ApplicationManager::ExecuteAction(ActionType ActType)
 		case DEL:
 			pAct = new Delete(this);
 			break;
+
+		case EDIT_Label:
+			pAct = new Edit(this);
+			break;
+
+		case SAVE:
+			pAct = new Save(this);
+			break;
+
+		case LOAD:
+			pAct = new Load(this);
+			break; 
 
 		case EXIT:
 			///TODO: create ExitAction here

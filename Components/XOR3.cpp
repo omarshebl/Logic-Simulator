@@ -6,6 +6,7 @@ XOR3::XOR3(const GraphicsInfo &r_GfxInfo, int r_FanOut):Gate(3, r_FanOut)
 	m_GfxInfo.y1 = r_GfxInfo.y1;
 	m_GfxInfo.x2 = r_GfxInfo.x2;
 	m_GfxInfo.y2 = r_GfxInfo.y2;
+	GateType = ITM_XOR3;
 }
 
 
@@ -22,7 +23,7 @@ void XOR3::Operate()
 void XOR3::Draw(Output* pOut)
 {
 	//Call output class and pass gate drawing info to it.
-	pOut->DrawXOR3(m_GfxInfo, Selected);
+	pOut->DrawXOR3(m_GfxInfo, Selected, m_Label);
 }
 
 //returns status of outputpin
@@ -42,4 +43,13 @@ int XOR3::GetInputPinStatus(int n)
 void XOR3::setInputPinStatus(int n, STATUS s)
 {
 	m_InputPins[n-1].setStatus(s);
+}
+
+void XOR3::SaveGate(ofstream& filename)
+{
+	if (m_Label == "")
+		m_Label = "&";
+	filename << "XOR3 " << m_Label << " " << (m_GfxInfo.x1 + m_GfxInfo.x2) / 2 << " " << (m_GfxInfo.y1 + m_GfxInfo.y2) / 2 << endl;
+	if (m_Label == "&")
+		m_Label = "";
 }

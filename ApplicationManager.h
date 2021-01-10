@@ -15,14 +15,15 @@ class ApplicationManager
 
 private:
 	int CompCount;		//Actual number of Components
+	int SWITCHSC;
+	int LEDSC;
 	Component* CompList[MaxCompCount];	//List of all Components (Array of pointers)
 	
 	Output* OutputInterface; //pointer to the Output Clase Interface
 	Input* InputInterface; //pointer to the Input Clase Interface
-	Component* Copied = NULL;
-
-public:
-
+	Component* Clipboard = NULL;
+	int CopiedCut; // 0 = Copy, 1 = Cut
+	
 
 public:	
 	ApplicationManager(); //constructor
@@ -41,18 +42,36 @@ public:
 
 	//Adds a new component to the list of components
 	void AddComponent(Component* pComp);
+	void DeleteLED();
+	void DeleteSWITCH();
+
+	bool CheckOverlap(int Cx, int Cy);
+	bool CheckDrawArea(int Cx, int Cy);
+	bool GetClickedComponent(int Cx, int Cy, Component*& pointer);
+
+	GraphicsInfo CreateGraphics(int Cx, int Cy, int Type);
 
 	Component** GetCompList();
 	int GetCompCount() const;
 	void SetCompCount(int x);
 
-
-
-
+	Component* GetSelectedComp();
 	int SelectedCounter() const;
 	void UnselectALL();
 	void SetCopied(Component* cComp);
+	void ResetCopied();
 	Component* GetCopied();
+
+	void SetCopiedCut(int input);
+	int GetCopiedCut();
+	void SetCuttedGate(GraphicsInfo input);
+
+
+	void SaveGates(ofstream& filename);
+	void LoadGates(ifstream& filename);
+
+
+	void DeleteAll();
 
 	//destructor
 	~ApplicationManager();

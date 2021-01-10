@@ -31,7 +31,8 @@ public:
 	//Reads parameters required for action to execute
 	virtual void ReadActionParameters();
 	//Execute action (code depends on action type)
-	virtual void Execute(int x);
+	virtual void Execute();
+	virtual void Execute(int Type, GraphicsInfo GInfo, string label = "");
 
 	virtual void Undo();
 	virtual void Redo();

@@ -35,6 +35,10 @@ void Delete::Execute()
 			for (int i = 0; i < compcount; i++) {
 				if (List[i]->GetSelect()) {
 					compcount--;
+					if (List[i]->GetType() == ITM_SWITCH)
+						pManager->DeleteSWITCH();
+					if (List[i]->GetType() == ITM_LED)
+						pManager->DeleteLED();
 					delete [] List[i];
 					List[i] = List[compcount];
 					List[compcount] = NULL;

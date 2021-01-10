@@ -33,29 +33,38 @@ void Paste::Execute()
 	Output* pOut = pManager->GetOutput();
 	Input* pIn = pManager->GetInput();
 	Component* C = pManager->GetCopied();
-
+	int CopiedCut = pManager->GetCopiedCut();
+	
 	if (C != NULL) {
-		if ((Cy >= (UI.ToolBarHeight + UI.COMP_Height / 2)) && Cy < UI.height - (UI.StatusBarHeight + UI.COMP_Height / 2) && Cx >(UI.COMP_Width / 2) && Cx < (UI.width - UI.COMP_Width / 2)) {
-			pManager->AddComponent(C);
-			Component** List = pManager->GetCompList();
-			int compcount = pManager->GetCompCount();
-			int Len = UI.COMP_Width;
-			int Wdth = UI.COMP_Height;
-			GraphicsInfo GInfo; //Gfx info to be used to construct the AND2 gate
-
-			GInfo.x1 = Cx - Len / 2;
-			GInfo.x2 = Cx + Len / 2;
-			GInfo.y1 = Cy - Wdth / 2;
-			GInfo.y2 = Cy + Wdth / 2;
-			List[compcount - 1]->SetGraphics(GInfo);
-			pOut->PrintMsg("Component Pasted Successfully !");
-			pManager->UnselectALL();
+		AddGATE* pAct = NULL;
+		int GateType = C->GetType();
+		if (pManager->CheckDrawArea(Cx,Cy))
+		{
+			bool overlap = pManager->CheckOverlap(Cx, Cy);
+			if (overlap) {
+				pOut->PrintMsg("You overlapped another component, Please Try Again !");
+			}
+			else {
+				GraphicsInfo GInfo;
+				GInfo = pManager->CreateGraphics(Cx, Cy, GateType);
+				if (CopiedCut == 0) {
+					pAct = new AddGATE(pManager);
+					pAct->Execute(GateType, GInfo);
+					pOut->PrintMsg("Component Pasted Successfully !");
+				}
+				else if (CopiedCut == 1) {
+					pManager->SetCuttedGate(GInfo);
+					pManager->AddComponent(C);
+					pManager->ResetCopied();
+					pManager->SetCopiedCut(0);
+					pOut->PrintMsg("Component Pasted Successfully !");
+				}
+			}
 		}
 		else {
 			pOut->PrintMsg("Please click inside the drawing area, Try Again !");
 		}
-	}
-	else {
+	} else {
 		pOut->PrintMsg("No previous component was copied or cut.");
 	}
 }

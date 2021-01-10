@@ -224,10 +224,19 @@
     <ClCompile Include="Components\LED.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Components\SWICTH.cpp">
+    <ClCompile Include="Actions\AddGATE.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Actions\Edit.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Actions\Save.cpp">
+      <Filter>Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\SWITCH.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Actions\AddGATE.cpp">
+    <ClCompile Include="Actions\Load.cpp">
       <Filter>Actions</Filter>
     </ClCompile>
   </ItemGroup>
@@ -422,6 +431,15 @@
     <ClInclude Include="Actions\AddGATE.h">
       <Filter>Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Actions\Edit.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\Save.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Actions\Load.h">
+      <Filter>Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -445,5 +463,8 @@
     <Filter Include="CMUgraphics Library">
       <UniqueIdentifier>{d63335de-3852-47e7-9b12-ce7902be525e}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="saved.txt" />
   </ItemGroup>
 </Project>

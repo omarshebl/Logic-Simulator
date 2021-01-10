@@ -72,8 +72,8 @@ void Output::PrintMsg(string msg) const
 	int MsgY = UI.StatusBarHeight - 10;
 
 	// Print the Message
-    pWind->SetFont(20, BOLD | ITALICIZED, BY_NAME, "Arial"); 
-	pWind->SetPen(UI.MsgColor); 
+    pWind->SetFont(20, BOLD, BY_NAME, "Arial"); 
+	pWind->SetPen(WHITE); 
 	pWind->DrawString(MsgX, UI.height - MsgY, msg);
 }
 //////////////////////////////////////////////////////////////////////////////////
@@ -164,8 +164,20 @@ void Output::CreateSimulationToolBar() const
 //								Components Drawing Functions							//
 //======================================================================================//
 
-void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawLabel(int X, int Y, string msg) const
 {
+	X += 10;
+	Y -= 20;
+	// Print the Message
+	pWind->SetFont(15, BOLD, BY_NAME, "Arial");
+	pWind->SetPen(WHITE);
+	pWind->DrawString(X, Y, msg);
+}
+
+void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected, string label) const
+{
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if(selected)	//use image in the highlighted case
 		GateImage="Images\\components\\highlighted\\buffer.jpg";
@@ -175,8 +187,10 @@ void Output::DrawBUFFER(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawNOT(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawNOT(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\not.jpg";
@@ -186,19 +200,23 @@ void Output::DrawNOT(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawAND2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\and.jpg";
 	else
 		GateImage = "Images\\components\\active\\and.jpg";
-
+	
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\or.jpg";
@@ -208,8 +226,10 @@ void Output::DrawOR2(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\nand.jpg";
@@ -219,8 +239,10 @@ void Output::DrawNAND2(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\nor.jpg";
@@ -230,8 +252,10 @@ void Output::DrawNOR2(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\xor.jpg";
@@ -241,8 +265,10 @@ void Output::DrawXOR2(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\xnor.jpg";
@@ -252,8 +278,10 @@ void Output::DrawXNOR2(GraphicsInfo r_GfxInfo, bool selected) const
 	pWind->DrawImage(GateImage, r_GfxInfo.x1, r_GfxInfo.y1, UI.COMP_Width, UI.COMP_Height);
 }
 
-void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\and3.jpg";
@@ -264,8 +292,10 @@ void Output::DrawAND3(GraphicsInfo r_GfxInfo, bool selected) const
 }
 
 
-void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\nor3.jpg";
@@ -276,8 +306,10 @@ void Output::DrawNOR3(GraphicsInfo r_GfxInfo, bool selected) const
 }
 
 
-void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\xor3.jpg";
@@ -288,8 +320,10 @@ void Output::DrawXOR3(GraphicsInfo r_GfxInfo, bool selected) const
 }
 
 
-void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\switch_off.jpg";
@@ -300,8 +334,10 @@ void Output::DrawSWITCH(GraphicsInfo r_GfxInfo, bool selected) const
 }
 
 
-void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
+	DrawLabel(r_GfxInfo.x1, r_GfxInfo.y1, label);
+
 	string GateImage;
 	if (selected)	//use image in the highlighted case
 		GateImage = "Images\\components\\highlighted\\led_off.jpg";
@@ -315,7 +351,7 @@ void Output::DrawLED(GraphicsInfo r_GfxInfo, bool selected) const
 
 
 
-void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected) const
+void Output::DrawConnection(GraphicsInfo r_GfxInfo, bool selected, string label) const
 {
 	//TODO: Add code to draw connection
 }

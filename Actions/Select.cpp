@@ -31,10 +31,7 @@ void Select::Execute()
 	//Get Center point of the Gate
 	ReadActionParameters();
 	Output* pOut = pManager->GetOutput();
-	Input* pIn = pManager->GetInput();
-
-	char x =  pIn->GetKeyQeueue();
-	
+	Input* pIn = pManager->GetInput();	
 
 	Component** List = pManager->GetCompList();
 	int compcount = pManager->GetCompCount();
